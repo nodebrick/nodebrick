@@ -1,0 +1,15 @@
+*.log
+
+.idea
+.vscode
+.docker/.persist
+.env
+.env.ci
+.DS_Store
+
+builds
+dist
+cache
+node_modules
+junit.xml
+docker-compose.ci.yml

@@ -1,0 +1,43 @@
+# Author: Xavier Martin
+# Version: 2.0
+
+version: '3.7'
+
+# This is the main container used as a base for any other modules
+# It will also be used when calling module_start.sh without module name passed
+services:
+  nodebrick:
+    container_name: ${PROJECT_ID}-development
+    build:
+      context: ./
+      dockerfile: ./base.dockerfile
+      target: development
+      args: 
+        - PROJECT_ID
+        - MODULE_ID
+        - NODE_VERSION
+        - DEBIAN_VERSION
+    environment:
+      - DEBUG_PORT
+    ports:
+      - ${DEBUG_PORT}:${DEBUG_PORT}
+    volumes:
+      - project-data:/home/${PROJECT_ID}/application:delegated
+      - ./.persist/${PROJECT_ID}-${MODULE_ID}/bash_history:/home/${PROJECT_ID}/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: bash -c -x "
+      tail -f /dev/null"
+
+volumes:
+  # our application source
+  project-data:
+    name: "${PROJECT_ID}-data"
+    driver: local
+    driver_opts:
+      type: none 
+      device: ${ROOT_DIR} # this is the mount path on the host
+      o: bind
+
+networks:
+  default:
+    name: "nodebrick-network"

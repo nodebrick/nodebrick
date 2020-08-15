@@ -1,0 +1,14 @@
+{
+    "name": "nodebrick-core",
+    "version": "1.0.0",
+    "description": "Nodebrick core, the glue between all the other modules",
+    "main": "index.ts",
+    "repository": "https://github.com/nodebrick",
+    "author": "Xavier Martin",
+    "license": "MIT",
+    "private": false,
+    "dependencies": {
+        "@marcj/marshal": "2.1.13",
+        "tsyringe": "4.3.0"
+    }
+}
