@@ -1,7 +1,4 @@
-import { ErrorModuleAlreadyRegistered } from './errors/ErrorModuleAlreadyRegistered';
-import { ErrorModuleNotRegistered } from './errors/ErrorModuleNotRegistered';
 import { INodebrickHelloWorldModule } from "./INodebrickHelloWorldModule";
-import { IModule } from "./models/IModule";
 
 export class NodebrickHelloWorldModule
     extends INodebrickHelloWorldModule
@@ -12,23 +9,23 @@ export class NodebrickHelloWorldModule
         super();
     }
 
-    public setup(): Promise<void> 
+    public async setup(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        //  nothing here
     }
 
-    public start(): Promise<void> 
+    public async start(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        //  nothing here
     }
 
-    public stop(): Promise<void> 
+    public async stop(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        //  nothing here
     }
 
-    public teardown(): Promise<void> 
+    public async teardown(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        //  nothing here
     }
 }

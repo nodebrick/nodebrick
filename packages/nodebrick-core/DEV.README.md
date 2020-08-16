@@ -8,5 +8,5 @@ It is loading and setting up all the modules defining your application
 
 * **[marshal.ts](https://github.com/maleet/marshal.ts)**  
   > Validation and serialization implementation to marshal JSON-representable data from JSON objects
-* **[tsyringe](https://github.com/microsoft/tsyringe)**  
-  > A lightweight dependency injection container for TypeScript/JavaScript for constructor injection
+* **[inversifyjs](https://github.com/inversify/InversifyJS)**  
+  > A powerful and lightweight inversion of control container for JavaScript & Node.js apps powered by TypeScrip

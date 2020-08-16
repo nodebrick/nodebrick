@@ -1,4 +1,4 @@
-import { IModule } from "@nodebrick-core;
+import { IModule } from "@nodebrick/nodebrick-core";
 export abstract class INodebrickHelloWorldModule
     extends IModule
 {

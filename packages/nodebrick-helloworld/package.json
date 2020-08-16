@@ -1,6 +1,6 @@
 {
-    "name": "nodebrick-core",
-    "version": "1.0.0",
+    "name": "@nodebrick/nodebrick-helloworld",
+    "version": "2.0.0",
     "description": "Nodebrick core, the glue between all the other modules",
     "main": "index.ts",
     "repository": "https://github.com/nodebrick",
@@ -10,11 +10,12 @@
     "scripts": {
         "clean": "rm -Rf ./dist *.tgz",
         "build": "yarn clean && tsc && cp package.json DEV.README.md README.md",
-        "lint": "",
+        "lint": "eslint ./src/**/*.ts ./tests/**/*.ts && tsc --noEmit",
         "test:dev": "",
         "test:ci": "",
-        "start:dev": "",
-        "start:production": ""
+        "start": "ts-node-dev --inspect=0.0.0.0:${DEBUG_PORT} tests/playground.ts --inline"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@nodebrick/nodebrick-core": "2.0.0"
+    }
 }

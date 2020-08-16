@@ -1,5 +1,10 @@
 export abstract class IModule
 {
+    protected constructor(...args: unknown[])
+    {
+        //  nothing here, just definfing the constructor to be able to receive any number of arguments
+    }
+
     /**
      * setup the module
      */

@@ -7,12 +7,31 @@ export class NodebrickCore
     extends INodebrickCore
     implements INodebrickCore
 {
-    protected _modules: typeof IModule[];
+    protected _modules: Array<typeof IModule>;
 
-    public constructor() 
+    protected constructor() 
     {
         super();
         this._modules = [];
+    }
+
+    /**
+     * Use this method to create a new application
+     */
+    public static async Bootstrap(): Promise<INodebrickCore>
+    {
+        // eslint-disable-next-line @typescript-eslint/typedef, @typescript-eslint/no-misused-promises, no-async-promise-executor
+        const promise: Promise<INodebrickCore> = new Promise((resolve, reject) => 
+        {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            (async(): Promise<void> => 
+            {
+                const nodebrickCore: INodebrickCore = new NodebrickCore();
+                resolve(nodebrickCore);
+            })();
+        });
+
+        return promise;
     }
 
     /**
@@ -22,10 +41,11 @@ export class NodebrickCore
     public async register(moduleClass: typeof IModule): Promise<void>
     {
         //  check if the module already exists
-        if( this._modules.includes(moduleClass) )
+        if(this._modules.includes(moduleClass))
         {
             throw new ErrorModuleAlreadyRegistered(moduleClass);
         }
+        this._modules.push(moduleClass);
     }
 
     /**
@@ -34,30 +54,35 @@ export class NodebrickCore
      */
     public async deregister(moduleClass: typeof IModule): Promise<void>
     {
+        const moduleIndex: number = this._modules.indexOf(moduleClass);
         //  check if the module already exists
-        if( !this._modules.includes(moduleClass) )
+        if(moduleIndex == -1)
         {
             throw new ErrorModuleNotRegistered(moduleClass);
         }
+        this._modules.splice(moduleIndex, 1);
     }
 
-    public setup(): Promise<void> 
+    public async setup(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        // throw new Error(`Method not implemented.`);
     }
 
-    public start(): Promise<void> 
+    public async start(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        //  setup all the registered modules
+
+        //  start all the registered modules
     }
 
-    public stop(): Promise<void> 
+    public async stop(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        //  stop all the registered modules
+        
     }
 
-    public teardown(): Promise<void> 
+    public async teardown(): Promise<void> 
     {
-        throw new Error("Method not implemented.");
+        // throw new Error(`Method not implemented.`);
     }
 }
