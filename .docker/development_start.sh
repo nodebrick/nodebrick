@@ -4,19 +4,21 @@
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # MacOS
     echo "MacOS detected"
-    SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
+    export SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 else
     # Linux
     echo "Linux OS detected"
-    SCRIPT_DIR=$(dirname $(readlink -f $0))
+    export SCRIPT_DIR=$(dirname $(readlink -f $0))
 fi
-ROOT_DIR=$(realpath "${SCRIPT_DIR}/..")
+export ROOT_DIR=$(realpath "${SCRIPT_DIR}/..")
 
 # get our arguments
 POSITIONAL=()
 COMMANDS=()
 MODULE_ID=""
 BUILD=""
+CONTAINER_TARGET=""
+CONTAINER_WORKDIR=""
 
 while [[ $# -gt 0 ]]
 do
@@ -39,10 +41,10 @@ do
         shift # past argument
         ;;
 
-        --shell)
-        SHELL=true
-        shift # past argument
-        ;;
+        # --shell)
+        # SHELL=true
+        # shift # past argument
+        # ;;
 
         *) # unknown option
         POSITIONAL+=("$1") # save it in an array for later
@@ -52,7 +54,7 @@ do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-# check if we have a .env file, if not create it from the template
+# check if we have an .env file for docker-compose, if not create it from the template
 if [[ ! -f "${SCRIPT_DIR}/.env" ]]; then
     cp ${SCRIPT_DIR}/.env.template ${SCRIPT_DIR}/.env
 fi
@@ -80,14 +82,31 @@ else
 
         # Check the docker container is not alreay up
         if [ -z "$(docker ps | grep -w \"${MODULE_ID}\" | awk '{print $1}')" ]; then
-            COMMANDS+=( "docker-compose -p ${MODULE_ID} -f ${SCRIPT_DIR}/docker-compose.yml -f ${ROOT_DIR}/packages/$1/docker-compose.yml up -d ${BUILD}")
+            COMMANDS+=( "docker-compose \
+                        -p ${PROJECT_ID}-${MODULE_ID}
+                        -f ${SCRIPT_DIR}/docker-compose.yml \
+                        -f ${ROOT_DIR}/packages/$1/docker-compose.yml \
+                        up -d ${BUILD}")
         fi
-
+        CONTAINER_TARGET="${PROJECT_ID}-${MODULE_ID}-development"
+        CONTAINER_WORKDIR="/home/${PROJECT_ID}/${APPLICATION_FOLDER}/packages/$1"
     # we want to work on the base image, no module selected
-    elif  [ -z "$(docker ps | grep -w \"${PROJECT_ID}\" | awk '{print $1}')" ]; then
-            COMMANDS+=( "ROOT_DIR=${ROOT_DIR} docker-compose -f \"${SCRIPT_DIR}/docker-compose.yml\" -p ${PROJECT_ID} up -d ${BUILD}" )
-            COMMANDS+=( "docker exec -it ${PROJECT_ID}-development zsh" )
+    else
+        if  [ -z "$(docker ps | grep -w \"${PROJECT_ID}-development\" | awk '{print $1}')" ]; then
+            COMMANDS+=( "docker-compose \
+                        -p ${PROJECT_ID} \
+                        -f ${SCRIPT_DIR}/docker-compose.yml \
+                        up -d ${BUILD}" )
+        fi
+        CONTAINER_WORKDIR="/home/${PROJECT_ID}/${APPLICATION_FOLDER}"
+        CONTAINER_TARGET="${PROJECT_ID}-development"
     fi
+fi
+
+if [[ -z ${SHELL_COMMAND} ]]; then
+    COMMANDS+=( "docker exec -itw ${CONTAINER_WORKDIR} ${CONTAINER_TARGET} zsh" )
+else
+    COMMANDS+=( "docker exec -itw ${CONTAINER_WORKDIR} ${CONTAINER_TARGET} zsh -c \"${SHELL_COMMAND}\"" )
 fi
 
 # join the commands in a string and execute

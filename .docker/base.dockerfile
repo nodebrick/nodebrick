@@ -113,7 +113,8 @@ RUN chown -R ${PROJECT_ID}:${PROJECT_ID} ${HOME}/docker
 
 # commitizen (formated commit so we can create nice release following semantic versioning)
 RUN yarn global add commitizen cz-conventional-changelog yarn-run \
-    && echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
+    && echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc \
+    && yarn global add @microsoft/rush
 
 # add profile to bash in case dev uses bash
 RUN echo "PS1='${PROJECT_ID}:\w$ '" >> ~/.profile \

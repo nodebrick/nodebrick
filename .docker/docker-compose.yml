@@ -17,16 +17,17 @@ services:
         - MODULE_ID
         - NODE_VERSION
         - DEBIAN_VERSION
+        - APPLICATION_FOLDER
     environment:
       - DEBUG_PORT
     ports:
       - ${DEBUG_PORT}:${DEBUG_PORT}
     volumes:
-      - project-data:/home/${PROJECT_ID}/application:delegated
-      - ./.persist/${PROJECT_ID}-${MODULE_ID}/bash_history:/home/${PROJECT_ID}/docker
+      - project-data:/home/${PROJECT_ID}/${APPLICATION_FOLDER}:delegated
+      - ./.persist/${PROJECT_ID}-${MODULE_ID}/bash_history:/home/${PROJECT_ID}/docker:delegated
       - /var/run/docker.sock:/var/run/docker.sock
-    command: bash -c -x "
-      tail -f /dev/null"
+    # to keep the container awake
+    command: bash -c -x "tail -f /dev/null"
 
 volumes:
   # our application source
