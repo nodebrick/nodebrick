@@ -62,12 +62,7 @@
     // "types": []
     // "useDefineForClassFields": true
   },
-  "include": [
-    "./migrations/**/*.ts",
-    "./src/index.ts",
-    "./src/spec-build.ts",
-    "./src/**/src/**/*"
-  ],
+  "include": [],
   "exclude": [
     "node_modules",
     "**/node_modules",

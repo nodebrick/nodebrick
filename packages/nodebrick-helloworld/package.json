@@ -9,16 +9,12 @@
     "private": false,
     "scripts": {
         "clean": "rm -Rf ./dist *.tgz",
-        "build": "",
+        "build": "yarn clean && tsc && cp package.json DEV.README.md README.md",
         "lint": "",
         "test:dev": "",
         "test:ci": "",
         "start:dev": "",
         "start:production": ""
     },
-    "dependencies": {
-        "@marcj/marshal": "2.1.13",
-        "reflect-metadata": "0.1.13",
-        "tsyringe": "4.3.0"
-    }
+    "dependencies": {}
 }

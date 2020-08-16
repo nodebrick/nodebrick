@@ -36,16 +36,24 @@ else
     # check if the environment is up
     if [[ ! -z "$(docker ps -q -f name=$1)" ]]; then
         # special case no modules
-        if [[ $1="${PROJECT_ID}-development" ]]; then
+        if [[ "$1" == "${PROJECT_ID}-development" ]]; then
             echo "Stopping main container $1"
             COMMANDS+=( "docker-compose \
                         -p ${PROJECT_ID} \
                         -f ${SCRIPT_DIR}/docker-compose.yml \
                         down --remove-orphans" )
         else
-            echo "Stopping module container $1"
+            if [[ ! -f "${ROOT_DIR}/packages/$1/.env" ]]; then
+                cp ${ROOT_DIR}/packages/$1/.env.template ${ROOT_DIR}/packages/$1/.env
+            fi
+            # source the env file
+            set -o allexport
+            source ${ROOT_DIR}/packages/$1/.env
+            set +o allexport
+            
+            echo "Stopping module container ${PROJECT_ID}-${MODULE_ID}"
             COMMANDS+=( "docker-compose \
-                        -p ${PROJECT_ID}-${1} \
+                        -p ${PROJECT_ID}-${MODULE_ID} \
                         -f ${SCRIPT_DIR}/docker-compose.yml \
                         -f ${ROOT_DIR}/packages/$1/docker-compose.yml \
                         down --remove-orphans" )

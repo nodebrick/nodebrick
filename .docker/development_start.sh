@@ -64,13 +64,13 @@ source ${SCRIPT_DIR}/.env
 set +o allexport
 
 # check if we want to start a precise module or not
-if [[ ! -z "$1" ]] || [[ ! -d "${ROOT_DIR}/packages/$1" ]]; then
+if [[ -n "$1" ]] && [[ ! -d "${ROOT_DIR}/packages/$1" ]]; then
     echo "The module specified $1 doesn't exists"
     exit 1
 else
     # we want to work on a specific module
     if [[ ! -z "$1" ]] ; then
-        "Requesting specific module $1"
+        echo "Requesting specific module $1"
         MODULE_ID=$1
         if [[ ! -f "${ROOT_DIR}/packages/$1/.env" ]]; then
             cp ${ROOT_DIR}/packages/$1/.env.template ${ROOT_DIR}/packages/$1/.env
@@ -81,14 +81,17 @@ else
         set +o allexport
 
         # Check the docker container is not alreay up
-        if [ -z "$(docker ps | grep -w \"${MODULE_ID}\" | awk '{print $1}')" ]; then
+        if [ -z "$(docker ps | grep -w \"${PROJECT_ID}-${MODULE_ID}\" | awk '{print $1}')" ]; then
+            echo "  - project: ${PROJECT_ID}"
+            echo "  - module: ${MODULE_ID}"
+            echo "Creating container ${PROJECT_ID}-${MODULE_ID}"
             COMMANDS+=( "docker-compose \
-                        -p ${PROJECT_ID}-${MODULE_ID}
+                        -p ${PROJECT_ID}-${MODULE_ID} \
                         -f ${SCRIPT_DIR}/docker-compose.yml \
                         -f ${ROOT_DIR}/packages/$1/docker-compose.yml \
                         up -d ${BUILD}")
         fi
-        CONTAINER_TARGET="${PROJECT_ID}-${MODULE_ID}-development"
+        CONTAINER_TARGET="${PROJECT_ID}-${MODULE_ID}"
         CONTAINER_WORKDIR="/home/${PROJECT_ID}/${APPLICATION_FOLDER}/packages/$1"
     # we want to work on the base image, no module selected
     else

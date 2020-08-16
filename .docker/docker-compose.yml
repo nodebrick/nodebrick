@@ -1,7 +1,7 @@
 # Author: Xavier Martin
 # Version: 2.0
 
-version: '3.7'
+version: '3.8'
 
 # This is the main container used as a base for any other modules
 # It will also be used when calling module_start.sh without module name passed

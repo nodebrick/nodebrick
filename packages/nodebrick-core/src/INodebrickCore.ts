@@ -1,25 +1,16 @@
 import { IModule } from "./models/IModule";
-import { ErrorModuleAlreadyRegistered } from './errors/ErrorModuleAlreadyRegistered';
-
 export abstract class INodebrickCore
+    extends IModule
 {
-    protected _modules: IModule[];
-
-    
     /**
      * Register a module against Nodebrick
-     * @param module IModule
+     * @param module typeof IModule
      */
-    public register(moduleClass: typeof IModule)
-    {
-        //  check if the module already exists
-        if( this._modules.includes(moduleClass) )
-        {
-            throw new ErrorModuleAlreadyRegistered(moduleClass);
-        }
-    }
+    public abstract register(moduleClass: typeof IModule): Promise<void>;
 
-public 
-    //  setup modules
-    //  start modules
+    /**
+     * Deregister a module against Nodebrick
+     * @param module typeof IModule
+     */
+    public abstract deregister(moduleClass: typeof IModule): Promise<void>;
 }

@@ -1,9 +1,6 @@
-// we import reflect-metadata once here
-import "reflect-metadata";
-
 // this is the public API of the module
-export * from "./INodebrickCore";
-export * from "./NodebrickCore";
+export * from "./INodebrickHelloWorldModule";
+export * from "./NodebrickHelloWorldModule";
 
 // errors
 export * from "./errors/ErrorModuleAlreadyRegistered";

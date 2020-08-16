@@ -1,0 +1,10 @@
+# Author: Xavier Martin
+# Version: 2.0
+
+version: '3.8'
+
+# This is the module container. We are using the base docker-compose in the .docker folder and 
+# are overriding some properties here, like the container name or args, env var, ...
+services:
+  nodebrick:
+    container_name: ${PROJECT_ID}-${MODULE_ID}
