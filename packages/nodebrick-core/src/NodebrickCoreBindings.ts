@@ -1,6 +1,4 @@
-import { AsyncContainerModule, interfaces, injectable } from "inversify";
-import { INodebrickHelloWorldService } from "./services/INodebrickHelloWorldService";
-import { NodebrickHelloWorldService } from './services/NodebrickHelloWorldService';
+import { AsyncContainerModule, injectable, interfaces } from "inversify";
 
 /**
  *  Create an Inversify AsyncContainer to load dependencies asynchronously
@@ -9,7 +7,7 @@ import { NodebrickHelloWorldService } from './services/NodebrickHelloWorldServic
  *  https://github.com/inversify/InversifyJS/blob/e6c8854baebf5e9a1e7917a2e131efc2504bf215/src/interfaces/interfaces.ts
  * */  
 @injectable()
-export class NodebrickHelloWorldBindings
+export class NodebrickCoreBindings
     extends AsyncContainerModule
 {
     public constructor()
@@ -19,13 +17,16 @@ export class NodebrickHelloWorldBindings
             unbind: interfaces.Unbind,
             isBound: interfaces.IsBound,
             rebind: interfaces.Rebind): Promise<void> =>
+        // eslint-disable-next-line arrow-body-style
         {
             //  bind models as Transient
 
             //  bind services as singleton
-            bind(INodebrickHelloWorldService).to(NodebrickHelloWorldService).inSingletonScope();
+            // bind(INodebrickHelloWorldService).to(NodebrickHelloWorldService).inSingletonScope();
 
             //  bind repository as Transient
+
+            return Promise.resolve();
         };
 
         super(registry);

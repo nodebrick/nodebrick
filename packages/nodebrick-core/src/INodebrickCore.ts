@@ -1,7 +1,10 @@
 import { IModule } from "./models/IModule";
+import { Container } from 'inversify';
 export abstract class INodebrickCore
     extends IModule
 {
+    public abstract container: Container;
+
     /**
      * Register a module against Nodebrick
      * @param module typeof IModule

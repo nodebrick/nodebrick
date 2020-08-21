@@ -1,10 +1,14 @@
 import { INodebrickHelloWorldService } from "../../src/services/INodebrickHelloWorldService";
 import { ITestApplicationModule } from "./ITestApplicationModule";
+import { AsyncContainerModule, injectable } from 'inversify';
 
+@injectable()
 export class TestApplicationModule
     extends ITestApplicationModule
     implements ITestApplicationModule
 {
+    protected _bindings!: typeof AsyncContainerModule;
+
     protected _helloWorldService: INodebrickHelloWorldService;
 
     public constructor(        
@@ -13,6 +17,11 @@ export class TestApplicationModule
     {
         super();
         this._helloWorldService = helloWorldService;
+    }
+
+    public async getBindings(): Promise<typeof AsyncContainerModule|null> 
+    {
+        return null;
     }
 
     public async setup(): Promise<void> 
